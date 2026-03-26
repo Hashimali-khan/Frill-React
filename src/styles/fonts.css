@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'Nastaliq';
+  src: local('Nastaliq');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: local('Montserrat');
+  font-weight: 400 700;
+}

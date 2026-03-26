@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-magenta: #ff00cc;
+}
+
+html, body, #root { height: 100%; }
