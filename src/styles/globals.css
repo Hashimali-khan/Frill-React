@@ -1,9 +1,73 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@config "../../tailwind.config.js";
+@import "tailwindcss";
 
+
+/* ════════════════════════════════════════
+   CSS CUSTOM PROPERTIES
+   (mirrors Tailwind tokens — needed for
+    Fabric.js + third-party libs)
+════════════════════════════════════════ */
 :root {
-  --color-magenta: #ff00cc;
+  --purple:       #3B1F5E;
+  --purple-mid:   #5A3087;
+  --purple-light: #7C4BAD;
+  --magenta:      #C2185B;
+  --magenta-hot:  #E91E8C;
+  --cream:        #FAF9FC;
+  --border:       #E5DEF2;
+  --gray-50:      #F8F7FB;
+  --gray-100:     #F0EBF8;
+  --gray-800:     #2D1F45;
+  --header-h:     64px;
+  --ann-h:        36px;
 }
 
-html, body, #root { height: 100%; }
+/* ════════════════════════════════════════
+   BASE LAYER
+════════════════════════════════════════ */
+@layer base {
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    @apply font-body bg-cream text-frill-800 antialiased;
+    overflow-x: hidden;
+  }
+  img { @apply block max-w-full object-cover; }
+  ::selection { background: var(--magenta); color: #fff; }
+}
+
+/* ════════════════════════════════════════
+   COMPONENT LAYER — Reusable utilities
+   that Tailwind's JIT doesn't generate
+════════════════════════════════════════ */
+@layer components {
+  .section-inner {
+    @apply max-w-frill mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  .eyebrow {
+    @apply inline-flex items-center gap-2
+           font-head text-[.68rem] font-bold
+           uppercase tracking-[.12em] text-magenta;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content: '';
+    @apply inline-block w-5 h-px bg-magenta rounded;
+  }
+  .section-title {
+    @apply font-head text-3xl font-black text-purple
+           tracking-tight leading-tight;
+  }
+  .section-title em {
+    @apply text-magenta italic;
+    font-family: theme('fontFamily.serif');
+  }
+}
+
+/* ════════════════════════════════════════
+   URDU TYPOGRAPHY UTILITY
+════════════════════════════════════════ */
+.urdu {
+  font-family: 'Noto Nastaliq Urdu', serif;
+  direction: rtl;
+  line-height: 2.2;  /* Nastaliq needs extra leading */
+}

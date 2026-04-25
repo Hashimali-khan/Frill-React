@@ -1,11 +1,60 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import HomePage from './pages/storefront/HomePage';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
+import MainLayout from '@/layouts/MainLayout'
+import AdminLayout from '@/layouts/AdminLayout'
+import ProtectedRoute from '@/features/auth/ProtectedRoute'
+import PageLoader from '@/components/atoms/PageLoader'
+
+// Code-split: each page loads only when navigated to
+const HomePage          = lazy(() => import('@/pages/storefront/HomePage'))
+const CollectionPage    = lazy(() => import('@/pages/storefront/CollectionPage'))
+const ProductDetailPage = lazy(() => import('@/pages/storefront/ProductDetailPage'))
+const CheckoutPage      = lazy(() => import('@/pages/storefront/CheckoutPage'))
+const DesignStudioPage  = lazy(() => import('@/pages/studio/DesignStudioPage'))
+const LoginPage         = lazy(() => import('@/pages/auth/LoginPage'))
+const SignupPage        = lazy(() => import('@/pages/auth/SignupPage'))
+const AdminDashboard    = lazy(() => import('@/pages/admin/AdminDashboardPage'))
+const AdminOrders       = lazy(() => import('@/pages/admin/AdminOrdersPage'))
+const AdminProducts     = lazy(() => import('@/pages/admin/AdminProductsPage'))
+
+const router = createBrowserRouter([
+  // ── Storefront Routes (inside MainLayout) ──
+  {
+    path: '/',
+    element: <MainLayout />,
+    children: [
+      { index: true,          element: <HomePage /> },
+      { path: 'collections',  element: <CollectionPage /> },
+      { path: 'products/:slug', element: <ProductDetailPage /> },
+      { path: 'cart',          element: <CheckoutPage /> },
+      { path: 'checkout',      element: <CheckoutPage /> },
+    ],
+  },
+  // ── Design Studio (full-screen, minimal chrome) ──
+  { path: 'studio/:productId', element: <DesignStudioPage /> },
+  // ── Auth (no layout) ──
+  { path: 'login',  element: <LoginPage /> },
+  { path: 'signup', element: <SignupPage /> },
+  // ── Admin Routes (Protected + AdminLayout) ──
+  {
+    path: 'admin',
+    element: (
+      <ProtectedRoute requiredRole="admin">
+        <AdminLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      { index: true,       element: <AdminDashboard /> },
+      { path: 'orders',    element: <AdminOrders /> },
+      { path: 'products',  element: <AdminProducts /> },
+    ],
+  },
+])
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-    </Routes>
-  );
+    <Suspense fallback=<PageLoader />>
+      <RouterProvider router={router} />
+    </Suspense>
+  )
 }

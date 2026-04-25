@@ -1,0 +1,46 @@
+{
+  "name": "frill",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000F\u0000r\u0000i\u0000l\u0000l\u0000-\u0000R\u0000e\u0000a\u0000c\u0000t\u0000\r\u0000 \u0000",
+  "main": "postcss.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hashimali-khan/Frill-React.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hashimali-khan/Frill-React/issues"
+  },
+  "homepage": "https://github.com/Hashimali-khan/Frill-React#readme",
+  "dependencies": {
+    "@fontsource/montserrat": "^5.2.8",
+    "@hookform/resolvers": "^5.2.2",
+    "@reduxjs/toolkit": "^2.11.2",
+    "@tailwindcss/vite": "^4.2.2",
+    "axios": "^1.13.6",
+    "clsx": "^2.1.1",
+    "fabric": "^7.2.0",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.7.0",
+    "postcss": "^8.5.8",
+    "react-hook-form": "^7.72.0",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.13.2",
+    "redux-persist": "^6.0.0",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss": "^4.2.2",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.4",
+    "@vitejs/plugin-react-swc": "^4.3.0",
+    "autoprefixer": "^10.5.0",
+    "vite-plugin-svgr": "^5.2.0"
+  }
+}
