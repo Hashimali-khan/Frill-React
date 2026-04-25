@@ -5,7 +5,7 @@ import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  plugins: [react(), svgr(),tailwindcss()],
+  plugins: [react(), svgr(), tailwindcss()],
   resolve: {
     alias: {
       // import Button from '@/components/atoms/Button'
@@ -26,10 +26,23 @@ export default defineConfig({
     // Code-split Fabric.js into its own chunk (heavy: ~500KB)
     rollupOptions: {
       output: {
-        manualChunks: {
-          'fabric':  ['fabric'],
-          'redux':   ['@reduxjs/toolkit', 'react-redux'],
-          'framer':  ['framer-motion'],
+        manualChunks(id) {
+          if (id.includes('/node_modules/fabric/') || id.includes('\\node_modules\\fabric\\')) {
+            return 'fabric'
+          }
+
+          if (
+            id.includes('/node_modules/@reduxjs/toolkit/') ||
+            id.includes('\\node_modules\\@reduxjs\\toolkit\\') ||
+            id.includes('/node_modules/react-redux/') ||
+            id.includes('\\node_modules\\react-redux\\')
+          ) {
+            return 'redux'
+          }
+
+          if (id.includes('/node_modules/framer-motion/') || id.includes('\\node_modules\\framer-motion\\')) {
+            return 'framer'
+          }
         },
       },
     },

@@ -1,4 +1,4 @@
-export const ROUTES = { HOME: '/' };
+
 /** Route constants —  */
 export const ROUTES = {
   HOME:          '/',
