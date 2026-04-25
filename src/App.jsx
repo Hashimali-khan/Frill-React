@@ -53,8 +53,9 @@ const router = createBrowserRouter([
 
 export default function App() {
   return (
-    <Suspense fallback=<PageLoader />>
+    <Suspense fallback={<PageLoader />}>
       <RouterProvider router={router} />
+      
     </Suspense>
   )
 }

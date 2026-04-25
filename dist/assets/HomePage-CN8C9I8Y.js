@@ -1,0 +1,1 @@
+import"./rolldown-runtime-COnpUsM8.js";import{i as e,r as t}from"./framer-BoDpOQKk.js";e();var n=t();function r(){return(0,n.jsx)(`div`,{className:`container mx-auto p-4`,children:`HomePage`})}export{r as default};

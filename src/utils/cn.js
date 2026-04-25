@@ -1,4 +1,4 @@
-**
+/**
  * cn() — Conditional classNames utility
  * Combines clsx (conditional classes) with
  * tailwind-merge (deduplicates conflicting Tailwind classes)
