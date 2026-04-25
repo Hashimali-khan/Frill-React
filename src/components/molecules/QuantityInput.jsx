@@ -9,3 +9,5 @@ export function QuantityInput({ value = 1, onChange = () => {} }) {
     </div>
   );
 }
+
+export default QuantityInput;
