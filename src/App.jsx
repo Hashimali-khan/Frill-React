@@ -9,6 +9,7 @@ import PageLoader from '@/components/atoms/PageLoader'
 const HomePage          = lazy(() => import('@/pages/storefront/HomePage'))
 const CollectionPage    = lazy(() => import('@/pages/storefront/CollectionPage'))
 const ProductDetailPage = lazy(() => import('@/pages/storefront/ProductDetailPage'))
+const CartPage          = lazy(() => import('@/pages/storefront/CartPage'))
 const CheckoutPage      = lazy(() => import('@/pages/storefront/CheckoutPage'))
 const DesignStudioPage  = lazy(() => import('@/pages/studio/DesignStudioPage'))
 const LoginPage         = lazy(() => import('@/pages/auth/LoginPage'))
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
       { index: true,          element: <HomePage /> },
       { path: 'collections',  element: <CollectionPage /> },
       { path: 'products/:slug', element: <ProductDetailPage /> },
-      { path: 'cart',          element: <CheckoutPage /> },
+      { path: 'cart',          element: <CartPage /> },
       { path: 'checkout',      element: <CheckoutPage /> },
     ],
   },
