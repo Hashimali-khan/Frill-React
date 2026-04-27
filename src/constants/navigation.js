@@ -8,6 +8,6 @@ export const NAV_ITEMS = [
   { label: 'Shop',       href: '/collections',  icon: 'ShoppingBag' },
   { label: 'Customize',  href: '/studio/new',  icon: 'Palette',
     badge: 'New' },
-  { label: 'Bulk Orders', href: '/bulk',         icon: 'Package' },
-  { label: 'About',       href: '/about',        icon: 'Info' },
+  { label: 'Bulk Orders', href: '/#bulk-orders', icon: 'Package' },
+  { label: 'About',       href: '/#about',       icon: 'Info' },
 ]
