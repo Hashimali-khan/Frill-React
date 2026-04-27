@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { ShoppingBag, Search, Heart, Menu } from 'lucide-react'
+import { ShoppingBag, Search, UserRound, Menu } from 'lucide-react'
 import { cn } from '@/utils/cn'
 import { useScrolled } from '@/hooks/useScrolled'
 import { openCart, selectCartCount } from '@/features/cart/cartSlice'
@@ -13,17 +13,18 @@ export default function SiteHeader() {
   const dispatch = useDispatch()
   const cartCount = useSelector(selectCartCount)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const primaryLinks = NAV_ITEMS.filter((item) => item.href !== '/')
 
   return (
     <>
       <header
         className={cn(
-          'sticky top-0 z-50 bg-white border-b border-brand-border',
-          'transition-shadow duration-200',
-          scrolled && 'shadow-frill-sm'
+          'sticky top-0 z-50 border-b border-white/60',
+          'bg-white/80 backdrop-blur-md transition-all duration-200',
+          scrolled && 'shadow-frill-sm bg-white/90'
         )}
       >
-        <div className="section-inner flex items-center justify-between h-16 gap-6">
+        <div className="section-inner flex items-center justify-between h-16 gap-4 lg:gap-6">
           <Link to="/" className="flex flex-col leading-none">
             <span className="font-head text-[1.75rem] font-black text-purple tracking-tight">
               Fr<span className="text-magenta">i</span>ll
@@ -33,13 +34,13 @@ export default function SiteHeader() {
             </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-1">
-            {NAV_ITEMS.map((item) => (
+          <nav className="hidden lg:flex items-center gap-1">
+            {primaryLinks.map((item) => (
               <NavLink
                 key={item.href}
                 to={item.href}
                 className={({ isActive }) => cn(
-                  'font-head text-[.78rem] font-semibold tracking-[.04em] uppercase',
+                  'font-head text-[.78rem] font-semibold tracking-[.08em] uppercase',
                   'px-[.85rem] py-2 rounded-frill transition-all duration-200',
                   isActive
                     ? 'text-magenta bg-frill-100'
@@ -55,9 +56,6 @@ export default function SiteHeader() {
             <button className="header-icon-btn hidden sm:flex" aria-label="Search">
               <Search size={20} />
             </button>
-            <button className="header-icon-btn hidden sm:flex" aria-label="Wishlist">
-              <Heart size={20} />
-            </button>
             <button
               type="button"
               onClick={() => dispatch(openCart())}
@@ -71,9 +69,10 @@ export default function SiteHeader() {
             </button>
             <Link
               to="/login"
-              className="hidden sm:flex font-head text-[.72rem] font-bold tracking-[.06em] uppercase bg-purple text-white px-[1.2rem] py-[.55rem] rounded-frill transition-colors hover:bg-magenta ml-1"
+              className="header-icon-btn hidden sm:flex"
+              aria-label="Account"
             >
-              Account
+              <UserRound size={20} />
             </Link>
             <button
               className="header-icon-btn md:hidden"
