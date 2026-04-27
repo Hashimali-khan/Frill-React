@@ -1,15 +1,16 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ShoppingBag, Search, Heart, Menu } from 'lucide-react'
 import { cn } from '@/utils/cn'
 import { useScrolled } from '@/hooks/useScrolled'
-import { selectCartCount } from '@/features/cart/cartSlice'
+import { openCart, selectCartCount } from '@/features/cart/cartSlice'
 import MobileDrawer from './MobileDrawer'
 import { NAV_ITEMS } from '@/constants/navigation'
 
 export default function SiteHeader() {
   const scrolled = useScrolled()
+  const dispatch = useDispatch()
   const cartCount = useSelector(selectCartCount)
   const [drawerOpen, setDrawerOpen] = useState(false)
 
@@ -57,12 +58,17 @@ export default function SiteHeader() {
             <button className="header-icon-btn hidden sm:flex" aria-label="Wishlist">
               <Heart size={20} />
             </button>
-            <Link to="/cart" className="header-icon-btn relative" aria-label="Cart">
+            <button
+              type="button"
+              onClick={() => dispatch(openCart())}
+              className="header-icon-btn relative"
+              aria-label="Cart"
+            >
               <ShoppingBag size={20} />
               <span className="absolute top-1 right-1 bg-magenta text-white text-[.6rem] font-bold font-head min-w-4 h-4 rounded-full flex items-center justify-center px-0.75">
                 {cartCount > 9 ? '9+' : cartCount}
               </span>
-            </Link>
+            </button>
             <Link
               to="/login"
               className="hidden sm:flex font-head text-[.72rem] font-bold tracking-[.06em] uppercase bg-purple text-white px-[1.2rem] py-[.55rem] rounded-frill transition-colors hover:bg-magenta ml-1"

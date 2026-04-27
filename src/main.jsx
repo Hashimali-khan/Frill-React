@@ -1,9 +1,11 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
-import { store } from '@/store'
 import App from './App'
 import './styles/globals.css'
+import { PersistGate } from 'redux-persist/integration/react'
+import { store, persistor } from '@/store'
+
 
 /**
  * Provider order matters:
@@ -14,10 +16,13 @@ import './styles/globals.css'
  * Note: React Router v7's RouterProvider handles its own
  * context internally, so it doesn't need to wrap Provider.
  */
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
-      <App />
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>
     </Provider>
   </StrictMode>
 )
