@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Globe, Instagram, Mail, MapPin, Youtube } from 'lucide-react'
+import { ArrowRight, Globe,  Mail, MapPin} from 'lucide-react'
 
 const QUICK_LINKS = [
   {
@@ -37,7 +37,7 @@ export default function SiteFooter() {
               Karachi, Lahore, Islamabad
             </div>
             <div className="flex gap-3 mt-6">
-              {[Globe, Instagram, Youtube, Mail].map((Icon, index) => (
+              {[Globe, Mail].map((Icon, index) => (
                 <a
                   key={index}
                   href="#"
