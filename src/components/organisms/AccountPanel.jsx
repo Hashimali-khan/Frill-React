@@ -1,0 +1,180 @@
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { LogOut, User, Mail, Phone } from 'lucide-react'
+import { logout, selectUser } from '@/features/auth/authSlice'
+import { cn } from '@/utils/cn'
+
+export default function AccountPanel() {
+  const [isOpen, setIsOpen] = useState(false)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const user = useSelector(selectUser)
+
+  const handleLogout = () => {
+    dispatch(logout())
+    setIsOpen(false)
+    navigate('/login')
+  }
+
+  const togglePanel = () => {
+    setIsOpen(!isOpen)
+  }
+
+  if (!user) {
+    return null
+  }
+
+  return (
+    <>
+      {/* Account Icon Button */}
+      <button
+        onClick={togglePanel}
+        className="header-icon-btn relative group"
+        aria-label="Account menu"
+        title={`${user.firstName} ${user.lastName}`}
+      >
+        <User size={20} />
+        <span className="absolute inset-0 rounded-frill bg-frill-200 opacity-0 group-hover:opacity-100 -z-10 transition-opacity" />
+      </button>
+
+      {/* Overlay */}
+      {isOpen && (
+        <button
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          onClick={() => setIsOpen(false)}
+          aria-label="Close account panel"
+        />
+      )}
+
+      {/* Account Panel */}
+      <div
+        className={cn(
+          'fixed right-0 top-0 h-screen w-80 bg-white shadow-frill-lg z-50',
+          'transform transition-transform duration-300 ease-out',
+          'flex flex-col',
+          isOpen ? 'translate-x-0' : 'translate-x-full',
+          'lg:static lg:w-auto lg:h-auto lg:shadow-none lg:bg-transparent',
+          'lg:transform-none lg:flex-row lg:items-center'
+        )}
+      >
+        {/* Header */}
+        <div className="lg:hidden border-b border-frill-200 p-4">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="text-frill-600 hover:text-purple transition-colors"
+            aria-label="Close panel"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 flex flex-col gap-4 p-6 lg:p-0 lg:w-auto lg:gap-0">
+          {/* User Info Card */}
+          <div className="bg-frill-50 rounded-frill-lg p-4 border border-frill-200 lg:hidden">
+            <p className="text-sm text-frill-600 mb-3 font-semibold">Account Details</p>
+
+            {/* Name */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-purple/20 flex items-center justify-center flex-shrink-0">
+                <User size={18} className="text-purple" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs text-frill-500 uppercase tracking-wider">Name</p>
+                <p className="font-semibold text-frill-900 truncate">
+                  {user.firstName} {user.lastName}
+                </p>
+              </div>
+            </div>
+
+            {/* Email */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-magenta/20 flex items-center justify-center flex-shrink-0">
+                <Mail size={18} className="text-magenta" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs text-frill-500 uppercase tracking-wider">Email</p>
+                <p className="font-semibold text-frill-900 truncate text-sm">
+                  {user.email}
+                </p>
+              </div>
+            </div>
+
+            {/* Phone */}
+            {user.phone && (
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-cyan-100 flex items-center justify-center flex-shrink-0">
+                  <Phone size={18} className="text-cyan-600" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs text-frill-500 uppercase tracking-wider">Phone</p>
+                  <p className="font-semibold text-frill-900">
+                    {user.phone}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Role Badge */}
+            {user.role && (
+              <div className="mt-4 pt-4 border-t border-frill-200">
+                <span
+                  className={cn(
+                    'inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider',
+                    user.role === 'admin'
+                      ? 'bg-purple text-white'
+                      : 'bg-magenta/20 text-magenta'
+                  )}
+                >
+                  {user.role === 'admin' ? '👑 Admin' : 'Customer'}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="space-y-2 lg:hidden">
+            <button
+              onClick={() => {
+                navigate('/account')
+                setIsOpen(false)
+              }}
+              className="w-full px-4 py-3 bg-frill-100 text-purple font-semibold rounded-frill
+                          hover:bg-frill-200 transition-colors text-sm uppercase tracking-wider"
+            >
+              My Account
+            </button>
+
+            {user.role === 'admin' && (
+              <button
+                onClick={() => {
+                  navigate('/admin')
+                  setIsOpen(false)
+                }}
+                className="w-full px-4 py-3 bg-purple text-white font-semibold rounded-frill
+                            hover:bg-purple/90 transition-colors text-sm uppercase tracking-wider flex items-center justify-center gap-2"
+              >
+                👑 Admin Dashboard
+              </button>
+            )}
+          </div>
+
+          {/* Divider */}
+          <div className="lg:hidden my-2 border-t border-frill-200" />
+
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="w-full lg:w-auto px-4 py-3 lg:py-2 bg-red-50 hover:bg-red-100 text-red-600 font-semibold rounded-frill
+                        lg:rounded-frill transition-colors text-sm uppercase tracking-wider flex items-center justify-center lg:justify-start gap-2
+                        lg:px-3 lg:text-red-600 lg:hover:text-red-700"
+          >
+            <LogOut size={18} />
+            Logout
+          </button>
+        </div>
+      </div>
+    </>
+  )
+}

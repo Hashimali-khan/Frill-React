@@ -71,3 +71,12 @@
   direction: rtl;
   line-height: 2.2;  /* Nastaliq needs extra leading */
 }
+/* Hide scrollbar for Chrome, Safari and Opera */
+.custom-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.custom-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
