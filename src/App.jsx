@@ -31,14 +31,24 @@ const router = createBrowserRouter([
       { path: 'collections',  element: <CollectionPage /> },
       { path: 'products/:slug', element: <ProductDetailPage /> },
       { path: 'cart',          element: <CartPage /> },
-      { path: 'checkout',      element: <CheckoutPage /> },
+      // 🔥 FIX: Wrapped CheckoutPage in the ProtectedRoute guard
+      { 
+        path: 'checkout',      
+        element: (
+          <ProtectedRoute>
+            <CheckoutPage />
+          </ProtectedRoute>
+        ) 
+      },
     ],
   },
   // ── Design Studio (full-screen, minimal chrome) ──
   { path: 'studio/:productId', element: <DesignStudioPage /> },
+  
   // ── Auth (no layout) ──
   { path: 'login',  element: <LoginPage /> },
   { path: 'signup', element: <SignupPage /> },
+  
   // ── Admin Routes (Protected + AdminLayout) ──
   {
     path: 'admin',
@@ -62,7 +72,6 @@ export default function App() {
   return (
     <Suspense fallback={<PageLoader />}>
       <RouterProvider router={router} />
-      
     </Suspense>
   )
 }
