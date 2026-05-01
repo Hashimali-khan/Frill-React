@@ -1,17 +1,20 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { ShoppingBag, Search, UserRound, Menu } from 'lucide-react'
+import { ShoppingBag, Search, Menu } from 'lucide-react'
 import { cn } from '@/utils/cn'
 import { useScrolled } from '@/hooks/useScrolled'
 import { openCart, selectCartCount } from '@/features/cart/cartSlice'
+import { selectIsAuthenticated } from '@/features/auth/authSlice'
 import MobileDrawer from './MobileDrawer'
+import AccountPanel from './AccountPanel'
 import { NAV_ITEMS } from '@/constants/navigation'
 
 export default function SiteHeader() {
   const scrolled = useScrolled()
   const dispatch = useDispatch()
   const cartCount = useSelector(selectCartCount)
+  const isAuthenticated = useSelector(selectIsAuthenticated)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const primaryLinks = NAV_ITEMS.filter((item) => item.href !== '/')
 
@@ -67,13 +70,20 @@ export default function SiteHeader() {
                 {cartCount > 9 ? '9+' : cartCount}
               </span>
             </button>
-            <Link
-              to="/login"
-              className="header-icon-btn hidden sm:flex"
-              aria-label="Account"
-            >
-              <UserRound size={20} />
-            </Link>
+            
+            {/* Account - Show panel if authenticated, login link otherwise */}
+            {isAuthenticated ? (
+              <AccountPanel />
+            ) : (
+              <Link
+                to="/login"
+                className="header-icon-btn hidden sm:flex"
+                aria-label="Account"
+              >
+                👤
+              </Link>
+            )}
+            
             <button
               className="header-icon-btn md:hidden"
               onClick={() => setDrawerOpen(true)}
