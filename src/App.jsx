@@ -17,6 +17,9 @@ const SignupPage        = lazy(() => import('@/pages/auth/SignupPage'))
 const AdminDashboard    = lazy(() => import('@/pages/admin/AdminDashboardPage'))
 const AdminOrders       = lazy(() => import('@/pages/admin/AdminOrdersPage'))
 const AdminProducts     = lazy(() => import('@/pages/admin/AdminProductsPage'))
+const AdminDesigns      = lazy(() => import('@/pages/admin/AdminDesignsPage'))
+const AdminCustomers    = lazy(() => import('@/pages/admin/AdminCustomersPage'))
+const AdminSettings     = lazy(() => import('@/pages/admin/AdminSettingsPage'))
 
 const router = createBrowserRouter([
   // ── Storefront Routes (inside MainLayout) ──
@@ -48,6 +51,9 @@ const router = createBrowserRouter([
       { index: true,       element: <AdminDashboard /> },
       { path: 'orders',    element: <AdminOrders /> },
       { path: 'products',  element: <AdminProducts /> },
+      { path: 'designs',   element: <AdminDesigns /> },
+      { path: 'customers', element: <AdminCustomers /> },
+      { path: 'settings',  element: <AdminSettings /> },
     ],
   },
 ])

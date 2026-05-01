@@ -1,6 +1,8 @@
-import { Outlet, NavLink, Link } from 'react-router-dom'
+import { Outlet, NavLink, Link, useNavigate } from 'react-router-dom'
 import { LayoutDashboard, ShoppingBag, Package, Palette,
          Users, Settings, LogOut, ArrowLeft } from 'lucide-react'
+import { useDispatch } from 'react-redux'
+import { logout } from '@/features/auth/authSlice'
 import { cn } from '@/utils/cn'
 
 const ADMIN_NAV = [
@@ -13,6 +15,14 @@ const ADMIN_NAV = [
 ]
 
 export default function AdminLayout() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  function handleSignOut() {
+    dispatch(logout())
+    navigate('/login', { replace: true })
+  }
+
   return (
     <div className="flex h-screen bg-frill-50 overflow-hidden">
 
@@ -48,8 +58,10 @@ export default function AdminLayout() {
                         text-white/50 hover:text-white transition-colors">
             <ArrowLeft size={16} /> View Store
           </Link>
-          <button className="flex items-center gap-3 px-3 py-2.5 text-sm
-                              text-white/50 hover:text-white transition-colors">
+          <button 
+            onClick={handleSignOut}
+            className="flex items-center gap-3 px-3 py-2.5 text-sm
+                        text-white/50 hover:text-white transition-colors">
             <LogOut size={16} /> Sign Out
           </button>
         </div>
