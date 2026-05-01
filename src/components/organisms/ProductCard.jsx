@@ -15,6 +15,7 @@ const BADGE_STYLES = {
 export default function ProductCard({ product, className }) {
   const dispatch = useDispatch()
   const { toast } = useToast()
+  const imageSrc = product.imgs?.[0] || product.img
 
   function handleAddToCart(e) {
     // 1. Crucial: Stop the <Link> from navigating to the detail page
@@ -44,9 +45,9 @@ export default function ProductCard({ product, className }) {
       )}
     >
       {/* --- IMAGE SECTION --- */}
-      <div className="relative overflow-hidden aspect-[3/4] bg-frill-100">
+      <div className="relative overflow-hidden aspect-3/4 bg-frill-100">
         <img
-          src={product.img} 
+          src={imageSrc} 
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           loading="lazy"
@@ -95,7 +96,7 @@ export default function ProductCard({ product, className }) {
 
       {/* --- INFO SECTION --- */}
       <div className="p-4 pb-5">
-        <p className="font-head text-[.65rem] font-semibold tracking-[.1em] uppercase text-frill-400 mb-1">
+        <p className="font-head text-[.65rem] font-semibold tracking-widest uppercase text-frill-400 mb-1">
           {product.vendor}
         </p>
         <h3 className="font-head text-[.9rem] font-bold text-purple mb-1.5 leading-snug group-hover:text-magenta transition-colors">

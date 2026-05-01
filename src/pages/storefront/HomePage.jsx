@@ -115,7 +115,7 @@ function HomeHeroVisual() {
 
           <div className="relative overflow-hidden rounded-3xl bg-frill-50 min-h-60 flex items-end p-4 border border-brand-border">
             <img
-              src={PRODUCTS_MOCK[0].img}
+              src={PRODUCTS_MOCK[0].imgs?.[0] || PRODUCTS_MOCK[0].img}
               alt={PRODUCTS_MOCK[0].name}
               className="absolute inset-0 h-full w-full object-cover"
             />
