@@ -11,15 +11,21 @@ const CollectionPage    = lazy(() => import('@/pages/storefront/CollectionPage')
 const ProductDetailPage = lazy(() => import('@/pages/storefront/ProductDetailPage'))
 const CartPage          = lazy(() => import('@/pages/storefront/CartPage'))
 const CheckoutPage      = lazy(() => import('@/pages/storefront/CheckoutPage'))
+const AccountPage       = lazy(() => import('@/pages/storefront/AccountPage'))
+const ContactPage       = lazy(() => import('@/pages/ContactPage'))
+const PrivacyPage       = lazy(() => import('@/pages/PrivacyPage'))
+const TermsPage         = lazy(() => import('@/pages/TermsPage'))
 const DesignStudioPage  = lazy(() => import('@/pages/studio/DesignStudioPage'))
 const LoginPage         = lazy(() => import('@/pages/auth/LoginPage'))
 const SignupPage        = lazy(() => import('@/pages/auth/SignupPage'))
+const ForgotPasswordPage = lazy(() => import('@/pages/auth/ForgotPasswordPage'))
 const AdminDashboard    = lazy(() => import('@/pages/admin/AdminDashboardPage'))
 const AdminOrders       = lazy(() => import('@/pages/admin/AdminOrdersPage'))
 const AdminProducts     = lazy(() => import('@/pages/admin/AdminProductsPage'))
 const AdminDesigns      = lazy(() => import('@/pages/admin/AdminDesignsPage'))
 const AdminCustomers    = lazy(() => import('@/pages/admin/AdminCustomersPage'))
 const AdminSettings     = lazy(() => import('@/pages/admin/AdminSettingsPage'))
+const NotFoundPage      = lazy(() => import('@/pages/NotFoundPage'))
 
 const router = createBrowserRouter([
   // ── Storefront Routes (inside MainLayout) ──
@@ -31,6 +37,10 @@ const router = createBrowserRouter([
       { path: 'collections',  element: <CollectionPage /> },
       { path: 'products/:slug', element: <ProductDetailPage /> },
       { path: 'cart',          element: <CartPage /> },
+      { path: 'account',       element: <AccountPage /> },
+      { path: 'contact',       element: <ContactPage /> },
+      { path: 'privacy',       element: <PrivacyPage /> },
+      { path: 'terms',         element: <TermsPage /> },
       // 🔥 FIX: Wrapped CheckoutPage in the ProtectedRoute guard
       { 
         path: 'checkout',      
@@ -46,8 +56,9 @@ const router = createBrowserRouter([
   { path: 'studio/:productId', element: <DesignStudioPage /> },
   
   // ── Auth (no layout) ──
-  { path: 'login',  element: <LoginPage /> },
-  { path: 'signup', element: <SignupPage /> },
+  { path: 'login',           element: <LoginPage /> },
+  { path: 'signup',          element: <SignupPage /> },
+  { path: 'forgot-password', element: <ForgotPasswordPage /> },
   
   // ── Admin Routes (Protected + AdminLayout) ──
   {
@@ -66,6 +77,9 @@ const router = createBrowserRouter([
       { path: 'settings',  element: <AdminSettings /> },
     ],
   },
+
+  // ── 404 Catch-all ──
+  { path: '*', element: <NotFoundPage /> },
 ])
 
 export default function App() {
