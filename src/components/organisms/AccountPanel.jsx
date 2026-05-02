@@ -29,8 +29,9 @@ export default function AccountPanel() {
     <>
       {/* Account Icon Button */}
       <button
-        onClick={togglePanel}
-        className="header-icon-btn relative group"
+        type="button"
+        onClick={(e) => { e.stopPropagation(); togglePanel() }}
+        className="header-icon-btn relative group z-60"
         aria-label="Account menu"
         title={`${user.firstName} ${user.lastName}`}
       >
@@ -41,6 +42,7 @@ export default function AccountPanel() {
       {/* Overlay */}
       {isOpen && (
         <button
+          type="button"
           className="fixed inset-0 z-40 bg-black/50 lg:hidden"
           onClick={() => setIsOpen(false)}
           aria-label="Close account panel"
@@ -53,14 +55,17 @@ export default function AccountPanel() {
           'fixed right-0 top-0 h-screen w-80 bg-white shadow-frill-lg z-50',
           'transform transition-transform duration-300 ease-out',
           'flex flex-col',
-          isOpen ? 'translate-x-0' : 'translate-x-full',
-          'lg:static lg:w-auto lg:h-auto lg:shadow-none lg:bg-transparent',
-          'lg:transform-none lg:flex-row lg:items-center'
+          isOpen
+            ? 'translate-x-0 lg:translate-x-0 lg:opacity-100 lg:pointer-events-auto'
+            : 'translate-x-full lg:translate-x-full lg:opacity-0 lg:pointer-events-none',
+          // On large screens position as a floating panel near the header
+          'lg:top-14 lg:right-6 lg:h-auto lg:w-72 lg:rounded-frill-lg lg:shadow-frill-lg lg:bg-white'
         )}
       >
         {/* Header */}
         <div className="lg:hidden border-b border-frill-200 p-4">
           <button
+            type="button"
             onClick={() => setIsOpen(false)}
             className="text-frill-600 hover:text-purple transition-colors"
             aria-label="Close panel"
@@ -136,6 +141,7 @@ export default function AccountPanel() {
           {/* Action Buttons */}
           <div className="space-y-2 lg:hidden">
             <button
+              type="button"
               onClick={() => {
                 navigate('/account')
                 setIsOpen(false)
@@ -148,6 +154,7 @@ export default function AccountPanel() {
 
             {user.role === 'admin' && (
               <button
+                type="button"
                 onClick={() => {
                   navigate('/admin')
                   setIsOpen(false)
@@ -165,6 +172,7 @@ export default function AccountPanel() {
 
           {/* Logout Button */}
           <button
+            type="button"
             onClick={handleLogout}
             className="w-full lg:w-auto px-4 py-3 lg:py-2 bg-red-50 hover:bg-red-100 text-red-600 font-semibold rounded-frill
                         lg:rounded-frill transition-colors text-sm uppercase tracking-wider flex items-center justify-center lg:justify-start gap-2
