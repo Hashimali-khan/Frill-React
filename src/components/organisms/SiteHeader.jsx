@@ -71,18 +71,8 @@ export default function SiteHeader() {
               </span>
             </button>
             
-            {/* Account - Show panel if authenticated, login link otherwise */}
-            {isAuthenticated ? (
-              <AccountPanel />
-            ) : (
-              <Link
-                to="/login"
-                className="header-icon-btn hidden sm:flex"
-                aria-label="Account"
-              >
-                👤
-              </Link>
-            )}
+            {/* Account Panel - Shows for both authenticated and guest users */}
+            <AccountPanel />
             
             <button
               className="header-icon-btn md:hidden"
