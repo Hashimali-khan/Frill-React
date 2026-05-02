@@ -149,7 +149,7 @@ export default function AccountPanel() {
             <div className="my-4 border-t border-frill-200" />
 
             {/* Footer Links */}
-            <div className="space-y-2 px-2 lg:hidden">
+            <div className="space-y-2 px-2">
               <button
                 onClick={() => {
                   navigate('/contact')
@@ -172,7 +172,7 @@ export default function AccountPanel() {
           /* AUTHENTICATED MODE CONTENT */
           <div className="flex-1 flex flex-col gap-4 p-6 lg:p-0 lg:w-auto lg:gap-0">
             {/* User Info Card */}
-            <div className="bg-frill-50 rounded-frill-lg p-4 border border-frill-200 lg:hidden">
+            <div className="bg-frill-50 rounded-frill-lg p-4 border border-frill-200">
               <p className="text-sm text-frill-600 mb-3 font-semibold">Account Details</p>
 
               {/* Name */}
@@ -234,7 +234,7 @@ export default function AccountPanel() {
             </div>
 
             {/* Action Buttons */}
-            <div className="space-y-2 lg:hidden">
+            <div className="space-y-2">
               <button
                 type="button"
                 onClick={() => {
@@ -263,7 +263,7 @@ export default function AccountPanel() {
             </div>
 
             {/* Divider */}
-            <div className="lg:hidden my-2 border-t border-frill-200" />
+            <div className="my-2 border-t border-frill-200" />
 
             {/* Logout Button */}
             <button
