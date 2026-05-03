@@ -60,18 +60,22 @@ export default function CartPage() {
             <div className="flex flex-col gap-4">
               {items.map((item) => (
                 <div key={item.key} className="flex gap-4 pb-4 border-b border-brand-border last:border-b-0 last:pb-0">
-                  <img src={item.img} alt={item.name} className="w-20 h-24 rounded-frill object-cover bg-frill-100 shrink-0" />
+                  <img src={item.mockupUrl || item.img} alt={item.name} className="w-20 h-24 rounded-frill object-cover bg-frill-100 shrink-0" />
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0">
                         <p className="font-head font-bold text-purple text-base truncate">{item.name}</p>
                         <p className="text-[.72rem] text-frill-400 mt-1">
-                          {item.selectedSize} ·
-                          <span
-                            className="inline-block w-3 h-3 rounded-full align-middle ml-1"
-                            style={{ background: item.selectedColor }}
-                          />
+                          {item.selectedSize}
+                          {item.selectedViewLabel ? ` · ${item.selectedViewLabel}` : ''}
+                          <span className="ml-1">
+                            {item.selectedColorName || item.selectedColor}
+                            <span
+                              className="inline-block w-3 h-3 rounded-full align-middle ml-1"
+                              style={{ background: item.selectedColor }}
+                            />
+                          </span>
                         </p>
                         <p className="font-head font-bold text-purple text-sm mt-2">
                           {formatPKR(item.price * item.quantity)}

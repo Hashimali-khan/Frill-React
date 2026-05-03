@@ -1,29 +1,78 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { PRODUCTS_MOCK } from '@/data/products.mock'
-import { applyProductImageCrop, applyProductImageCropList } from '@/utils/images'
+import { applyProductImageCrop } from '@/utils/images'
 
-/**
- * RTK Query API slice for products.
- * Currently returns mock data — swap baseQuery for a real
- * API URL and remove the queryFn overrides when backend is live.
- */
+const STORAGE_KEY = 'frill_products_v2'
+
+function normalizeViews(views) {
+  return (Array.isArray(views) ? views : []).map((view) => ({
+    ...view,
+    imageUrl: applyProductImageCrop(view.imageUrl),
+  }))
+}
+
+function normalizeColors(colors) {
+  return (Array.isArray(colors) ? colors : []).map((color) => ({
+    ...color,
+    views: normalizeViews(color.views),
+  }))
+}
+
+function normalizeProduct(product) {
+  return {
+    ...product,
+    colors: normalizeColors(product.colors),
+  }
+}
+
+function loadProducts() {
+  if (typeof window === 'undefined') return PRODUCTS_MOCK
+
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY)
+    if (stored) {
+      const parsed = JSON.parse(stored)
+      if (Array.isArray(parsed) && parsed.length) return parsed.map(normalizeProduct)
+    }
+  } catch {
+    // Ignore storage parse errors.
+  }
+
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(PRODUCTS_MOCK))
+  return PRODUCTS_MOCK.map(normalizeProduct)
+}
+
+function saveProducts(products) {
+  if (typeof window === 'undefined') return
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(products))
+}
+
+function slugify(name) {
+  return String(name || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+}
+
 export const productsApi = createApi({
   reducerPath: 'productsApi',
   baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
   tagTypes: ['Product'],
   endpoints: (builder) => ({
-
     getProducts: builder.query({
-      // queryFn: use mock during dev; comment out & use query() for production
       queryFn(params) {
-        let data = [...PRODUCTS_MOCK]
-        if (params?.category && params.category !== 'all')
-          data = data.filter(p => p.category === params.category)
-        if (params?.search)
-          data = data.filter(p => p.name.toLowerCase().includes(params.search.toLowerCase()))
-        if (params?.sort === 'price-asc')  data.sort((a, b) => a.price - b.price)
+        let data = loadProducts()
+        if (params?.category && params.category !== 'all') {
+          data = data.filter((product) => product.category === params.category)
+        }
+        if (params?.search) {
+          const term = params.search.toLowerCase()
+          data = data.filter((product) => product.name.toLowerCase().includes(term))
+        }
+        if (params?.sort === 'price-asc') data.sort((a, b) => a.price - b.price)
         if (params?.sort === 'price-desc') data.sort((a, b) => b.price - a.price)
-        if (params?.sort === 'rating')     data.sort((a, b) => b.stars - a.stars)
+        if (params?.sort === 'rating') data.sort((a, b) => b.stars - a.stars)
         return { data }
       },
       providesTags: ['Product'],
@@ -31,70 +80,81 @@ export const productsApi = createApi({
 
     getProductBySlug: builder.query({
       queryFn({ slug }) {
-        const product = PRODUCTS_MOCK.find(p => p.slug === slug)
+        const products = loadProducts()
+        const product = products.find((item) => item.slug === slug)
         if (!product) return { error: { status: 404, data: 'Not found' } }
         return { data: product }
       },
       providesTags: (_, __, { slug }) => [{ type: 'Product', id: slug }],
     }),
 
+    getProductById: builder.query({
+      queryFn({ id }) {
+        const products = loadProducts()
+        const numericId = Number(id)
+        const product = products.find((item) => item.id === numericId)
+        if (!product) return { error: { status: 404, data: 'Not found' } }
+        return { data: product }
+      },
+      providesTags: (_, __, { id }) => [{ type: 'Product', id }],
+    }),
+
     createProduct: builder.mutation({
       queryFn(newProduct) {
-        // Mock: assign a new ID and add to local array
-        const imgs = applyProductImageCropList(newProduct.imgs || [])
-        const img = applyProductImageCrop(newProduct.img || imgs[0] || '')
-        const created = {
+        const products = loadProducts()
+        const created = normalizeProduct({
           ...newProduct,
           id: Date.now(),
-          slug: newProduct.name.toLowerCase().replace(/\s+/g, '-'),
-          img,
-          imgs: img ? [img, ...imgs.filter((image) => image !== img)] : imgs,
-        }
-        PRODUCTS_MOCK.push(created)
+          slug: slugify(newProduct.name),
+        })
+
+        products.push(created)
+        saveProducts(products)
         return { data: created }
-      },
-      invalidatesTags: ['Product'],  // auto-refetch getProducts after mutation
-    }),
-
-    updateProduct: builder.mutation({
-      queryFn({ id, ...patch }) {
-        const idx = PRODUCTS_MOCK.findIndex(p => p.id === id)
-        if (idx === -1) return { error: { status: 404 } }
-        const current = PRODUCTS_MOCK[idx]
-        const imgs = applyProductImageCropList(patch.imgs || current.imgs || [])
-        const img = applyProductImageCrop(patch.img || imgs[0] || current.img || '')
-        const updated = {
-          ...current,
-          ...patch,
-          img,
-          imgs: img ? [img, ...imgs.filter((image) => image !== img)] : imgs,
-          slug: patch.name ? patch.name.toLowerCase().replace(/\s+/g, '-') : current.slug,
-        }
-
-        PRODUCTS_MOCK[idx] = updated
-        return { data: updated }
-      },
-      invalidatesTags: (result, error, { id }) => {
-        const tags = ['Product', { type: 'Product', id }]
-
-        if (result?.slug) {
-          tags.push({ type: 'Product', id: result.slug })
-        }
-
-        return tags
-      },
-    }),
-
-    deleteProduct: builder.mutation({
-      queryFn(id) {
-        const idx = PRODUCTS_MOCK.findIndex(p => p.id === id)
-        if (idx !== -1) PRODUCTS_MOCK.splice(idx, 1)
-        return { data: { success: true } }
       },
       invalidatesTags: ['Product'],
     }),
 
+    updateProduct: builder.mutation({
+      queryFn({ id, ...patch }) {
+        const products = loadProducts()
+        const numericId = Number(id)
+        const index = products.findIndex((item) => item.id === numericId)
+        if (index === -1) return { error: { status: 404 } }
+
+        const current = products[index]
+        const updated = normalizeProduct({
+          ...current,
+          ...patch,
+          id: current.id,
+          slug: patch.name ? slugify(patch.name) : current.slug,
+        })
+
+        products[index] = updated
+        saveProducts(products)
+        return { data: updated }
+      },
+      invalidatesTags: (_, __, { id }) => ['Product', { type: 'Product', id }],
+    }),
+
+    deleteProduct: builder.mutation({
+      queryFn(id) {
+        const products = loadProducts()
+        const numericId = Number(id)
+        const next = products.filter((item) => item.id !== numericId)
+        saveProducts(next)
+        return { data: { success: true } }
+      },
+      invalidatesTags: ['Product'],
+    }),
   }),
 })
 
-export const { useGetProductsQuery, useGetProductBySlugQuery, useCreateProductMutation, useUpdateProductMutation, useDeleteProductMutation } = productsApi
+export const {
+  useGetProductsQuery,
+  useGetProductBySlugQuery,
+  useGetProductByIdQuery,
+  useCreateProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
+} = productsApi

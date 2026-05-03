@@ -17,35 +17,50 @@ export default function ProductDetailPage() {
   const dispatch = useDispatch()
   const { data: product, isLoading } = useGetProductBySlugQuery({ slug })
 
-  const [activeImg, setActiveImg] = useState(0)
   const [activeColor, setActiveColor] = useState(0)
+  const [activeView, setActiveView] = useState(0)
   const [activeSize, setActiveSize] = useState(DEFAULT_SIZE_INDEX)
   const [qty, setQty] = useState(1)
   const [isAdding, setIsAdding] = useState(false)
 
-  const selectedColorFromState = location.state?.selectedColor
+  const selectedColorIdFromState = location.state?.selectedColorId
+  const selectedViewIdFromState = location.state?.selectedViewId
 
   useEffect(() => {
     if (!product) return
 
-    if (selectedColorFromState) {
-      const colorIndex = product.colors?.findIndex((color) => color === selectedColorFromState)
-      if (colorIndex >= 0) {
-        setActiveColor(colorIndex)
-      }
-    } else {
-      setActiveColor(0)
-    }
+    const colorIndex = selectedColorIdFromState
+      ? product.colors?.findIndex((color) => color.id === selectedColorIdFromState)
+      : 0
+    const nextColorIndex = colorIndex >= 0 ? colorIndex : 0
+    setActiveColor(nextColorIndex)
 
-    setActiveImg(0)
+    const views = product.colors?.[nextColorIndex]?.views || []
+    const viewIndex = selectedViewIdFromState
+      ? views.findIndex((view) => view.id === selectedViewIdFromState)
+      : 0
+    setActiveView(viewIndex >= 0 ? viewIndex : 0)
+
     setActiveSize(Math.min(DEFAULT_SIZE_INDEX, Math.max((product.sizes?.length || 1) - 1, 0)))
     setQty(1)
-  }, [product, selectedColorFromState])
+  }, [product, selectedColorIdFromState, selectedViewIdFromState])
 
   const selectedColor = useMemo(() => {
-    if (!product?.colors?.length) return '#000000'
+    if (!product?.colors?.length) return null
     return product.colors[activeColor] || product.colors[0]
   }, [activeColor, product])
+
+  const selectedView = useMemo(() => {
+    if (!selectedColor?.views?.length) return null
+    return selectedColor.views[activeView] || selectedColor.views[0]
+  }, [activeView, selectedColor])
+
+  useEffect(() => {
+    if (!selectedColor?.views?.length) return
+    if (activeView >= selectedColor.views.length) {
+      setActiveView(0)
+    }
+  }, [activeView, selectedColor])
 
   if (isLoading) {
     return (
@@ -73,7 +88,10 @@ export default function ProductDetailPage() {
         product,
         quantity: qty,
         selectedSize: product.sizes?.[activeSize] || 'M',
-        selectedColor,
+        selectedColor: selectedColor
+          ? { id: selectedColor.id, name: selectedColor.name, hex: selectedColor.hex }
+          : '#000',
+        selectedView: selectedView ? { id: selectedView.id, label: selectedView.label } : null,
       })
     )
 
@@ -82,7 +100,10 @@ export default function ProductDetailPage() {
 
   function handleDesignClick() {
     navigate(`/studio/${product.id}`, {
-      state: { selectedColor },
+      state: {
+        selectedColorId: selectedColor?.id,
+        selectedViewId: selectedView?.id,
+      },
     })
   }
 
@@ -99,27 +120,29 @@ export default function ProductDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         <div className="lg:col-span-7 flex flex-col-reverse lg:flex-row gap-4">
           <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible">
-            {(product.imgs || [product.img]).map((img, index) => (
+            {(selectedColor?.views || []).map((view, index) => (
               <button
-                key={`${img}-${index}`}
-                onClick={() => setActiveImg(index)}
+                key={`${view.id}-${index}`}
+                onClick={() => setActiveView(index)}
                 className={cn(
                   'w-20 h-24 shrink-0 rounded-frill overflow-hidden border-2 transition-all',
-                  activeImg === index ? 'border-purple shadow-md' : 'border-transparent opacity-70 hover:opacity-100'
+                  activeView === index ? 'border-purple shadow-md' : 'border-transparent opacity-70 hover:opacity-100'
                 )}
                 type="button"
               >
-                <img src={img} alt="" className="w-full h-full object-cover" />
+                <img src={view.imageUrl} alt={view.label} className="w-full h-full object-cover" />
               </button>
             ))}
           </div>
 
           <div className="flex-1 rounded-frill-lg overflow-hidden bg-frill-100 aspect-4/5 shadow-sm">
-            <img
-              src={(product.imgs && product.imgs[activeImg]) || product.img}
-              alt={product.name}
-              className="w-full h-full object-cover transition-all duration-500 hover:scale-105"
-            />
+            {selectedView ? (
+              <img
+                src={selectedView.imageUrl}
+                alt={`${product.name} ${selectedView.label}`}
+                className="w-full h-full object-cover transition-all duration-500 hover:scale-105"
+              />
+            ) : null}
           </div>
         </div>
 
@@ -155,20 +178,25 @@ export default function ProductDetailPage() {
           <div className="mb-6">
             <div className="flex justify-between mb-3">
               <span className="font-head text-xs font-bold uppercase tracking-widest text-purple">Selected Colour</span>
-              <span className="text-xs font-medium text-frill-400">{selectedColor}</span>
+              <span className="text-xs font-medium text-frill-400">
+                {selectedColor?.name || selectedColor?.hex || '—'}
+              </span>
             </div>
             <div className="flex gap-3 flex-wrap">
               {product.colors?.map((color, index) => (
                 <button
-                  key={color}
-                  onClick={() => setActiveColor(index)}
-                  style={{ background: color }}
+                  key={color.id}
+                  onClick={() => {
+                    setActiveColor(index)
+                    setActiveView(0)
+                  }}
+                  style={{ background: color.hex }}
                   className={cn(
                     'w-9 h-9 rounded-full border-2 ring-offset-2 transition-all hover:scale-110',
                     activeColor === index ? 'border-purple ring-2 ring-purple/20' : 'border-brand-border'
                   )}
                   type="button"
-                  aria-label={`Select color ${color}`}
+                  aria-label={`Select color ${color.name}`}
                 />
               ))}
             </div>

@@ -318,13 +318,21 @@ export default function CheckoutPage() {
             <div className="flex flex-col gap-4 max-h-105 overflow-y-auto pr-1">
               {orderSummary.items.map((item) => (
                 <div key={item.key} className="flex gap-3 pb-4 border-b border-brand-border last:border-b-0 last:pb-0">
-                  <img src={item.img} alt={item.name} className="w-16 h-16 rounded-frill object-cover bg-frill-100" />
+                  <img src={item.mockupUrl || item.img} alt={item.name} className="w-16 h-16 rounded-frill object-cover bg-frill-100" />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <p className="font-head font-bold text-purple text-sm truncate">{item.name}</p>
                         <p className="text-[.72rem] text-frill-400 mt-1">
-                          {item.selectedSize} · <span className="inline-block w-3 h-3 rounded-full align-middle ml-1" style={{ background: item.selectedColor }} />
+                          {item.selectedSize}
+                          {item.selectedViewLabel ? ` · ${item.selectedViewLabel}` : ''}
+                          <span className="ml-1">
+                            {item.selectedColorName || item.selectedColor}
+                            <span
+                              className="inline-block w-3 h-3 rounded-full align-middle ml-1"
+                              style={{ background: item.selectedColor }}
+                            />
+                          </span>
                         </p>
                       </div>
                       <button
