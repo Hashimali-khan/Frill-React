@@ -48,10 +48,17 @@ export default function CartDrawer() {
               )}
               {items.map(item => (
                 <div key={item.key} className="flex gap-3 pb-4 border-b border-brand-border">
-                  <img src={item.img} alt={item.name} className="w-16 h-16 rounded-frill object-cover bg-frill-100" />
+                  <img src={item.mockupUrl || item.img} alt={item.name} className="w-16 h-16 rounded-frill object-cover bg-frill-100" />
                   <div className="flex-1 min-w-0">
                     <p className="font-head font-bold text-purple text-sm truncate">{item.name}</p>
-                    <p className="text-[.72rem] text-frill-400">{item.selectedSize} · <span style={{ background:item.selectedColor }} className="inline-block w-3 h-3 rounded-full align-middle"></span></p>
+                    <p className="text-[.72rem] text-frill-400">
+                      {item.selectedSize}
+                      {item.selectedViewLabel ? ` · ${item.selectedViewLabel}` : ''}
+                      <span className="ml-1">
+                        {item.selectedColorName || item.selectedColor}
+                        <span style={{ background: item.selectedColor }} className="inline-block w-3 h-3 rounded-full align-middle ml-1" />
+                      </span>
+                    </p>
                     <p className="font-head font-bold text-purple text-sm mt-1">{formatPKR(item.price * item.quantity)}</p>
                     <div className="flex items-center gap-2 mt-2">
                       <button onClick={() => dispatch(updateQuantity({ key:item.key, quantity:item.quantity-1 }))} className="w-6 h-6 rounded border border-brand-border flex items-center justify-center hover:border-purple"><Minus size={10} /></button>

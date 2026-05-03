@@ -15,7 +15,9 @@ const BADGE_STYLES = {
 export default function ProductCard({ product, className }) {
   const dispatch = useDispatch()
   const { toast } = useToast()
-  const imageSrc = product.imgs?.[0] || product.img
+  const primaryColor = product.colors?.[0]
+  const primaryView = primaryColor?.views?.[0]
+  const imageSrc = primaryView?.imageUrl || product.imgs?.[0] || product.img
 
   function handleAddToCart(e) {
     // 1. Crucial: Stop the <Link> from navigating to the detail page
@@ -28,7 +30,10 @@ export default function ProductCard({ product, className }) {
       quantity: 1, 
       // Fallback logic for safety
       selectedSize: product.sizes?.[0] || 'M', 
-      selectedColor: product.colors?.[0] || '#000' 
+      selectedColor: primaryColor
+        ? { id: primaryColor.id, name: primaryColor.name, hex: primaryColor.hex }
+        : '#000',
+      selectedView: primaryView ? { id: primaryView.id, label: primaryView.label } : null,
     }))
 
     toast.success(`🛒 Added ${product.name} to cart!`)

@@ -4,7 +4,8 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE,
 import storage from 'redux-persist/lib/storage'
 import cartReducer    from '@/features/cart/cartSlice'
 import authReducer    from '@/features/auth/authSlice'
-import studioReducer  from '@/features/design-studio/studioSlice'
+import studioReducer from '@/features/studio/studioSlice'
+import { studioHistoryMiddleware } from '@/features/studio/studioHistoryMiddleware'
 import { productsApi } from '@/features/products/productsApi'
 
 /* Only cart persists to localStorage */
@@ -27,7 +28,7 @@ export const store = configureStore({
     getDefault({
       // These action types from redux-persist should not trigger serialization warning
       serializableCheck: { ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER] },
-    }).concat(productsApi.middleware),
+    }).concat(productsApi.middleware, studioHistoryMiddleware),
 })
 
 export const persistor = persistStore(store)
