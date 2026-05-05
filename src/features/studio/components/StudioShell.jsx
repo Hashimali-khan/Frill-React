@@ -40,6 +40,7 @@ export default function StudioShell({ product, initialColorId, initialViewId, ba
   const [selectedColorId, setSelectedColorId] = useState(initialColorId || product?.colors?.[0]?.id)
   const [selectedViewId, setSelectedViewId] = useState(initialViewId || product?.colors?.[0]?.views?.[0]?.id)
   const [selectedSize, setSelectedSize] = useState(product?.sizes?.[0] || 'M')
+  const [mobilePropsOpen, setMobilePropsOpen] = useState(false)
 
   const {
     addText,
@@ -511,7 +512,7 @@ export default function StudioShell({ product, initialColorId, initialViewId, ba
           </div>
         </main>
 
-        <StudioPropertiesPanel />
+        <StudioPropertiesPanel mobileOpen={mobilePropsOpen} onMobileClose={() => setMobilePropsOpen(false)} />
       </div>
 
       <StudioDock
@@ -527,6 +528,7 @@ export default function StudioShell({ product, initialColorId, initialViewId, ba
         canUndo={canUndo}
         canRedo={canRedo}
         onConfirm={handleConfirmDesign}
+        onOpenProperties={() => setMobilePropsOpen(true)}
       />
     </div>
   )

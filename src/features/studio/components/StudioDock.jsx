@@ -1,4 +1,4 @@
-import { Type, Brush, ImageIcon, Square, Circle, MousePointer2, Undo2, Redo2, CheckCircle2 } from 'lucide-react'
+import { Type, Brush, ImageIcon, Square, Circle, MousePointer2, Undo2, Redo2, CheckCircle2, Settings } from 'lucide-react'
 import { cn } from '@/utils/cn'
 
 export default function StudioDock({
@@ -14,6 +14,7 @@ export default function StudioDock({
   canUndo,
   canRedo,
   onConfirm,
+  onOpenProperties,
 }) {
   return (
     <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-brand-border z-40">
@@ -66,6 +67,14 @@ export default function StudioDock({
           className={cn('p-2 rounded-frill', tool === 'brush' ? 'bg-purple text-white' : 'bg-frill-100 text-frill-600')}
         >
           <Brush size={18} />
+        </button>
+        <button
+          type="button"
+          onClick={() => onOpenProperties?.()}
+          className="p-2 rounded-frill bg-frill-100 text-frill-600"
+          aria-label="Open properties"
+        >
+          <Settings size={18} />
         </button>
       </div>
       <div className="flex items-center justify-between px-4 pb-3 gap-2">

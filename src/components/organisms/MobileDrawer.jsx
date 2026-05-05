@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { AnimatePresence, motion } from 'framer-motion'
+import { createPortal } from 'react-dom'
 import { X, LogOut, User } from 'lucide-react'
 import { NAV_ITEMS } from '@/constants/navigation'
 import { selectUser, logout } from '@/features/auth/authSlice'
@@ -24,21 +25,23 @@ export default function MobileDrawer({ open, onClose }) {
     navigate('/login')
   }
 
-  return (
+  if (typeof document === 'undefined') return null
+
+  return createPortal(
     <AnimatePresence>
       {open && (
         <>
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-purple/60 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-purple/60 backdrop-blur-sm z-60"
             onClick={onClose}
           />
           {/* Drawer panel */}
           <motion.aside
             initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed right-0 top-0 h-full w-70 bg-white z-50
+            className="fixed right-0 top-0 h-full w-70 bg-white z-70
                         flex flex-col shadow-frill-xl"
           >
             <div className="flex items-center justify-between p-5 border-b border-brand-border">
@@ -132,6 +135,7 @@ export default function MobileDrawer({ open, onClose }) {
           </motion.aside>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.getElementById('overlays') || document.body
   )
 }
