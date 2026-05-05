@@ -111,9 +111,22 @@ function DesignPreviewModal({ design, onClose, onApprove, onReject }) {
           {/* Action Buttons */}
           <div className="flex gap-3 pt-4 border-t border-brand-border">
             <button
-              onClick={() => {
-                window.open(design.printUrl, '_blank')
-              }}
+              onClick={async () => {
+  try {
+    const response = await fetch(design.printUrl)
+    const blob = await response.blob()
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${design.title}-print.png`
+    document.body.appendChild(a)
+    a.click()
+    window.URL.revokeObjectURL(url)
+    document.body.removeChild(a)
+  } catch (err) {
+    console.error('Download failed:', err)
+  }
+}}
               className="flex-1 flex items-center justify-center gap-2 bg-frill-100 text-frill-700 rounded-frill px-4 py-2.5 font-head text-xs font-bold uppercase tracking-wide hover:bg-frill-200 transition-colors"
             >
               <Download size={14} /> Download Print
