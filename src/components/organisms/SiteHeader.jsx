@@ -16,6 +16,7 @@ export default function SiteHeader() {
   const cartCount = useSelector(selectCartCount)
   const isAuthenticated = useSelector(selectIsAuthenticated)
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [accountOpen, setAccountOpen] = useState(false)
   const primaryLinks = NAV_ITEMS.filter((item) => item.href !== '/')
 
   return (
@@ -72,11 +73,21 @@ export default function SiteHeader() {
             </button>
             
             {/* Account Panel - Shows for both authenticated and guest users */}
-            <AccountPanel />
-            
+            <AccountPanel
+              open={accountOpen}
+              onToggle={(next) => {
+                setAccountOpen(next)
+                if (next) setDrawerOpen(false)
+              }}
+              onClose={() => setAccountOpen(false)}
+            />
+
             <button
               className="header-icon-btn md:hidden"
-              onClick={() => setDrawerOpen(true)}
+              onClick={() => {
+                setDrawerOpen(true)
+                setAccountOpen(false)
+              }}
               aria-label="Open menu"
             >
               <Menu size={22} />

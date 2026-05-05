@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import { createPortal } from 'react-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   finalizeObject,
@@ -30,7 +31,7 @@ function LabeledRange({ label, value, min, max, step, onChange, onCommit }) {
   )
 }
 
-export default function StudioPropertiesPanel() {
+export default function StudioPropertiesPanel({ mobileOpen = false, onMobileClose }) {
   const dispatch = useDispatch()
   const activeObject = useSelector(selectActiveObject)
   const ui = useSelector(selectUiState)
@@ -58,7 +59,7 @@ export default function StudioPropertiesPanel() {
   }, [activeObject])
 
   if (!activeObject) {
-    return (
+    const desktopPlaceholder = (
       <div className="hidden lg:flex w-80 bg-white border-l border-brand-border p-6 text-center text-frill-500">
         <div>
           <p className="font-head text-sm font-bold text-purple">Select a layer</p>
@@ -66,10 +67,30 @@ export default function StudioPropertiesPanel() {
         </div>
       </div>
     )
+
+    const mobilePlaceholder = (
+      <div className="lg:hidden fixed inset-0 z-60 flex items-end">
+        <div className="w-full bg-white border-t border-brand-border p-4">
+          <p className="font-head text-sm font-bold text-purple">No selection</p>
+          <p className="text-xs mt-2 text-frill-500">Tap any element on the canvas to edit its properties.</p>
+          <div className="mt-3 flex justify-end">
+            <button onClick={onMobileClose} className="px-3 py-2 rounded-frill bg-frill-100">Close</button>
+          </div>
+        </div>
+      </div>
+    )
+
+    return (
+      <>
+        {desktopPlaceholder}
+        {mobileOpen ? createPortal(mobilePlaceholder, document.getElementById('overlays') || document.body) : null}
+      </>
+    )
   }
 
-  return (
-    <aside className="hidden lg:flex w-80 bg-white border-l border-brand-border flex-col overflow-y-auto">
+  // Build inner content used by both desktop and mobile panels
+  const innerContent = (
+    <>
       <div className="p-5 border-b border-brand-border">
         <p className="text-[0.65rem] uppercase tracking-widest text-frill-400">Properties</p>
         <h3 className="font-head text-lg font-black text-purple">{activeObject.name}</h3>
@@ -356,6 +377,36 @@ export default function StudioPropertiesPanel() {
           Delete Layer
         </button>
       </div>
+    </>
+  )
+
+  const desktopPanel = (
+    <aside className="hidden lg:flex w-80 bg-white border-l border-brand-border flex-col overflow-y-auto">
+      {innerContent}
     </aside>
+  )
+
+  const mobilePanel = (
+    <div className="lg:hidden fixed inset-0 z-60 flex items-end">
+      <div className="w-full max-h-[80%] bg-white border-t border-brand-border overflow-auto">
+        <div className="p-4 border-b border-brand-border flex items-center justify-between">
+          <div>
+            <p className="text-sm font-black text-purple">{activeObject.name}</p>
+            <p className="text-xs text-frill-500">Properties</p>
+          </div>
+          <button onClick={onMobileClose} className="text-frill-600">Close</button>
+        </div>
+        <div>
+          {innerContent}
+        </div>
+      </div>
+    </div>
+  )
+
+  return (
+    <>
+      {desktopPanel}
+      {mobileOpen ? createPortal(mobilePanel, document.getElementById('overlays') || document.body) : null}
+    </>
   )
 }
