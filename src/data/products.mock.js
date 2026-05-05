@@ -190,4 +190,211 @@ export const PRODUCTS_MOCK = [
       },
     ],
   },
+  {
+    id: 6,
+    slug: 'urban-oversized-tee',
+    name: 'Urban Oversized Tee',
+    vendor: 'Frill Custom Apparel',
+    category: 'tshirt',
+    price: 1399,
+    oldPrice: 1899,
+    badge: 'SALE',
+    badgeVariant: 'sale',
+    stars: 4.7,
+    reviews: 245,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'],
+    desc: '200 GSM heavyweight cotton - perfect for statement prints.',
+    customizable: true,
+    tags: ['tshirt', 'oversized', 'cotton'],
+    colors: [
+      {
+        id: 'cream',
+        name: 'Cream',
+        hex: '#FFF8E7',
+        views: makeViews(
+          'https://images.unsplash.com/photo-1555062545-c9b12b2b6ba5?w=900&auto=format&fit=crop&q=80'
+        ),
+      },
+      {
+        id: 'sage',
+        name: 'Sage Green',
+        hex: '#9CAF88',
+        views: makeViews(
+          'https://images.unsplash.com/photo-1578762221305-32b5be5ca22f?w=900&auto=format&fit=crop&q=80'
+        ),
+      },
+      {
+        id: 'navy',
+        name: 'Navy Blue',
+        hex: '#0A3161',
+        views: makeViews(
+          'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=900&auto=format&fit=crop&q=80'
+        ),
+      },
+    ],
+  },
+  {
+    id: 7,
+    slug: 'polo-performance-shirt',
+    name: 'Polo Performance Shirt',
+    vendor: 'Frill Sport',
+    category: 'polo',
+    price: 1599,
+    oldPrice: null,
+    badge: 'NEW',
+    badgeVariant: 'new',
+    stars: 4.5,
+    reviews: 89,
+    sizes: ['S', 'M', 'L', 'XL', '2XL'],
+    desc: 'Classic polo with moisture-wicking technology for active comfort.',
+    customizable: true,
+    tags: ['polo', 'activewear', 'performance'],
+    colors: [
+      {
+        id: 'magenta',
+        name: 'Magenta',
+        hex: '#E5208C',
+        views: makeViews(
+          'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900&auto=format&fit=crop&q=80'
+        ),
+      },
+      {
+        id: 'coral',
+        name: 'Coral',
+        hex: '#FF6B6B',
+        views: makeViews(
+          'https://images.unsplash.com/photo-1503342217505-b21f330aa738?w=900&auto=format&fit=crop&q=80'
+        ),
+      },
+    ],
+  },
+  {
+    id: 8,
+    slug: 'premium-sweatshirt',
+    name: 'Premium Sweatshirt',
+    vendor: 'Frill Custom Apparel',
+    category: 'hoodie',
+    price: 1999,
+    oldPrice: 2699,
+    badge: 'SALE',
+    badgeVariant: 'sale',
+    stars: 4.8,
+    reviews: 445,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL'],
+    desc: '280 GSM fleece sweatshirt with embroidered branding',
+    customizable: true,
+    tags: ['sweatshirt', 'fleece', 'comfortable'],
+    colors: [
+      {
+        id: 'heather-grey',
+        name: 'Heather Grey',
+        hex: '#8B8B8B',
+        views: makeViews(
+          'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=900&auto=format&fit=crop&q=80'
+        ),
+      },
+      {
+        id: 'forest-green',
+        name: 'Forest Green',
+        hex: '#2D5016',
+        views: makeViews(
+          'https://images.unsplash.com/photo-1578762221305-32b5be5ca22f?w=900&auto=format&fit=crop&q=80'
+        ),
+      },
+      {
+        id: 'wine',
+        name: 'Wine',
+        hex: '#722F37',
+        views: makeViews(
+          'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=900&auto=format&fit=crop&q=80'
+        ),
+      },
+    ],
+  },
+  {
+    id: 9,
+    slug: 'athletic-tank',
+    name: 'Athletic Tank Top',
+    vendor: 'Frill Sport',
+    category: 'tshirt',
+    price: 899,
+    oldPrice: null,
+    badge: null,
+    badgeVariant: null,
+    stars: 4.4,
+    reviews: 156,
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    desc: '160 GSM lightweight tank - ideal for active lifestyle',
+    customizable: false,
+    tags: ['tank', 'activewear', 'lightweight'],
+    colors: [
+      {
+        id: 'black',
+        name: 'Black',
+        hex: '#1a1a1a',
+        views: makeViews(
+          'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=900&auto=format&fit=crop&q=80'
+        ),
+      },
+      {
+        id: 'white',
+        name: 'White',
+        hex: '#ffffff',
+        views: makeViews(
+          'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900&auto=format&fit=crop&q=80'
+        ),
+      },
+      {
+        id: 'charcoal',
+        name: 'Charcoal',
+        hex: '#4A4A4A',
+        views: makeViews(
+          'https://images.unsplash.com/photo-1550614637-0b36558a1b8d?w=900&auto=format&fit=crop&q=80'
+        ),
+      },
+    ],
+  },
+  {
+    id: 10,
+    slug: 'vintage-wash-tee',
+    name: 'Vintage Wash Tee',
+    vendor: 'Frill Custom Apparel',
+    category: 'tshirt',
+    price: 1299,
+    oldPrice: 1699,
+    badge: 'POPULAR',
+    badgeVariant: 'custom',
+    stars: 4.9,
+    reviews: 678,
+    sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL'],
+    desc: 'Soft-washed 150 GSM cotton tee with a comfortable lived-in feel',
+    customizable: true,
+    tags: ['tshirt', 'vintage', 'cotton', 'wash'],
+    colors: [
+      {
+        id: 'stone-blue',
+        name: 'Stone Blue',
+        hex: '#6B9BD1',
+        views: makeViews(
+          'https://images.unsplash.com/photo-1552508744-04a550b45c66?w=900&auto=format&fit=crop&q=80'
+        ),
+      },
+      {
+        id: 'ash',
+        name: 'Ash',
+        hex: '#A8A8A8',
+        views: makeViews(
+          'https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=900&auto=format&fit=crop&q=80'
+        ),
+      },
+      {
+        id: 'rust',
+        name: 'Rust',
+        hex: '#B7632D',
+        views: makeViews(
+          'https://images.unsplash.com/photo-1503342217505-b21f330aa738?w=900&auto=format&fit=crop&q=80'
+        ),
+      },
+    ],
+  },
 ]

@@ -27,12 +27,14 @@ export default function DesignStudioPage() {
     )
   }
 
+  const productBackLink = product ? `/products/${product.slug || product.id}` : '/collections'
+
   return (
     <StudioShell
       product={product}
       initialColorId={initialColorId}
       initialViewId={initialViewId}
-      backLink="/collections"
+      backLink={productBackLink}
       onBack={() => navigate(-1)}
     />
   )

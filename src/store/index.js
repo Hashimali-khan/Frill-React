@@ -7,6 +7,8 @@ import authReducer    from '@/features/auth/authSlice'
 import studioReducer from '@/features/studio/studioSlice'
 import { studioHistoryMiddleware } from '@/features/studio/studioHistoryMiddleware'
 import { productsApi } from '@/features/products/productsApi'
+import { designsApi } from '@/features/designs/designsApi'
+import { ordersApi } from '@/features/orders/ordersApi'
 
 /* Only cart persists to localStorage */
 const cartPersistConfig = {
@@ -20,6 +22,8 @@ const rootReducer = combineReducers({
   auth:                  authReducer,
   studio:                studioReducer,
   [productsApi.reducerPath]: productsApi.reducer,
+  [designsApi.reducerPath]: designsApi.reducer,
+  [ordersApi.reducerPath]: ordersApi.reducer,
 })
 
 export const store = configureStore({
@@ -28,7 +32,7 @@ export const store = configureStore({
     getDefault({
       // These action types from redux-persist should not trigger serialization warning
       serializableCheck: { ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER] },
-    }).concat(productsApi.middleware, studioHistoryMiddleware),
+    }).concat(productsApi.middleware, designsApi.middleware, ordersApi.middleware, studioHistoryMiddleware),
 })
 
 export const persistor = persistStore(store)

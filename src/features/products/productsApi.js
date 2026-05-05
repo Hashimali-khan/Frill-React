@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { PRODUCTS_MOCK } from '@/data/products.mock'
 import { applyProductImageCrop } from '@/utils/images'
 
-const STORAGE_KEY = 'frill_products_v2'
+const STORAGE_KEY = 'frill_products_v3'
 
 function normalizeViews(views) {
   return (Array.isArray(views) ? views : []).map((view) => ({
@@ -75,7 +75,13 @@ export const productsApi = createApi({
         if (params?.sort === 'rating') data.sort((a, b) => b.stars - a.stars)
         return { data }
       },
-      providesTags: ['Product'],
+      providesTags: (result) =>
+        result
+          ? [
+              { type: 'Product', id: 'LIST' },
+              ...result.map((p) => ({ type: 'Product', id: p.id })),
+            ]
+          : [{ type: 'Product', id: 'LIST' }],
     }),
 
     getProductBySlug: builder.query({
@@ -112,7 +118,7 @@ export const productsApi = createApi({
         saveProducts(products)
         return { data: created }
       },
-      invalidatesTags: ['Product'],
+      invalidatesTags: [{ type: 'Product', id: 'LIST' }],
     }),
 
     updateProduct: builder.mutation({
@@ -134,7 +140,7 @@ export const productsApi = createApi({
         saveProducts(products)
         return { data: updated }
       },
-      invalidatesTags: (_, __, { id }) => ['Product', { type: 'Product', id }],
+      invalidatesTags: (_, __, { id }) => [{ type: 'Product', id: 'LIST' }, { type: 'Product', id }],
     }),
 
     deleteProduct: builder.mutation({
@@ -145,7 +151,7 @@ export const productsApi = createApi({
         saveProducts(next)
         return { data: { success: true } }
       },
-      invalidatesTags: ['Product'],
+      invalidatesTags: [{ type: 'Product', id: 'LIST' }],
     }),
   }),
 })
