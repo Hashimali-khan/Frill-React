@@ -106,7 +106,11 @@ const studioSlice = createSlice({
       }
     },
     addObject(state, { payload }) {
-      const object = payload
+      const object = {
+        ...payload,
+        // Tag object with the currently active view so designs stay view-specific
+        viewId: state.history.present.background.viewId,
+      }
       state.history.present.objects.push(object)
       state.ui.activeObjectId = object.id
     },

@@ -15,7 +15,7 @@ function ensureContainer() {
   container.style.display = 'flex'
   container.style.flexDirection = 'column'
   container.style.gap = '0.5rem'
-  container.style.zIndex = '9999'
+  container.style.zIndex = '999999'
   container.style.maxWidth = 'min(92vw, 22rem)'
   container.style.pointerEvents = 'none'
 

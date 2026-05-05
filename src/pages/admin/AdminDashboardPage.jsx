@@ -1,7 +1,9 @@
 import { TrendingUp, Package, Users, ShoppingBag, Eye } from 'lucide-react'
 import { Link } from 'react-router-dom' // <-- ADDED FOR ROUTING
+import { useEffect, useState } from 'react'
 import { formatPKR } from '@/utils/currency'
 import OrderTable from '@/pages/admin/OrderTable'
+import { useGetOrdersQuery } from '@/features/orders/ordersApi'
 
 const KPI_CARDS = [
   { label: 'Total Revenue',  value: 248500, format: 'pkr', delta: '+22%', icon: TrendingUp, color: 'green' },
@@ -17,14 +19,20 @@ const COLOR_MAP = {
   blue:   'bg-blue-50   border-blue-200   text-blue-700',
 }
 
-// Mock Data for the Recent Orders Table
-const RECENT_ORDERS = [
-  { id: '#ORD-1029', customer: 'Ahmed Ali', date: 'Oct 24, 2024', status: 'Processing', total: 4500 },
-  { id: '#ORD-1028', customer: 'Sara Khan', date: 'Oct 24, 2024', status: 'Shipped',    total: 8200 },
-  { id: '#ORD-1027', customer: 'Usman Chaudhry', date: 'Oct 23, 2024', status: 'Delivered',  total: 2150 },
-]
+// Recent orders will be loaded from localStorage via getOrders()
 
 export default function AdminDashboardPage() {
+  const [recentOrders, setRecentOrders] = useState([])
+  const { data: orders = [] } = useGetOrdersQuery()
+
+  useEffect(() => {
+    if (orders && orders.length > 0) {
+      const sorted = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      setRecentOrders(sorted.slice(0, 5))
+    } else {
+      setRecentOrders([])
+    }
+  }, [orders])
   return (
     <div className="p-8 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
@@ -61,9 +69,9 @@ export default function AdminDashboardPage() {
           </Link>
         </div>
         
-        <div>
-  <OrderTable orders={RECENT_ORDERS} variant="dashboard" />
-</div>
+          <div>
+        <OrderTable orders={recentOrders} variant="dashboard" />
+      </div>
       </div>
     </div>
   )

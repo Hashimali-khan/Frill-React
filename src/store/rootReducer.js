@@ -4,6 +4,7 @@ import auth from '@/features/auth/authSlice';
 import products from '@/features/products/productsSlice';
 import studio from '@/features/studio/studioSlice';
 import { productsApi } from '@/features/products/productsApi';
+import { designsApi } from '@/features/designs/designsApi';
 
 export default combineReducers({
 	cart,
@@ -11,4 +12,5 @@ export default combineReducers({
 	products,
 	studio,
 	[productsApi.reducerPath]: productsApi.reducer,
+	[designsApi.reducerPath]: designsApi.reducer,
 });

@@ -21,6 +21,7 @@ const SignupPage        = lazy(() => import('@/pages/auth/SignupPage'))
 const ForgotPasswordPage = lazy(() => import('@/pages/auth/ForgotPasswordPage'))
 const AdminDashboard    = lazy(() => import('@/pages/admin/AdminDashboardPage'))
 const AdminOrders       = lazy(() => import('@/pages/admin/AdminOrdersPage'))
+const AdminOrderDetails = lazy(() => import('@/pages/admin/AdminOrderDetails'))
 const AdminProducts     = lazy(() => import('@/pages/admin/AdminProductsPage'))
 const AdminDesigns      = lazy(() => import('@/pages/admin/AdminDesignsPage'))
 const AdminCustomers    = lazy(() => import('@/pages/admin/AdminCustomersPage'))
@@ -70,7 +71,8 @@ const router = createBrowserRouter([
     ),
     children: [
       { index: true,       element: <AdminDashboard /> },
-      { path: 'orders',    element: <AdminOrders /> },
+    { path: 'orders',    element: <AdminOrders /> },
+    { path: 'orders/:orderId', element: <AdminOrderDetails /> },
       { path: 'products',  element: <AdminProducts /> },
       { path: 'designs',   element: <AdminDesigns /> },
       { path: 'customers', element: <AdminCustomers /> },

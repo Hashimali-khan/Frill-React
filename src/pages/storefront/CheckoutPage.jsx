@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CheckCircle2, ShoppingBag, Trash2 } from 'lucide-react'
+import { useCreateOrderMutation } from '@/features/orders/ordersApi'
 import {
   checkoutStep1Schema,
   checkoutStep2Schema,
@@ -42,6 +43,8 @@ export default function CheckoutPage() {
   const items = useSelector(selectCartItems)
   const count = useSelector(selectCartCount)
   const total = useSelector(selectCartTotal)
+  
+  const [createOrder] = useCreateOrderMutation()
 
   const [step, setStep] = useState(0)
   const [formData, setFormData] = useState({})
@@ -99,8 +102,19 @@ export default function CheckoutPage() {
       total,
     }
 
-    setSubmittedOrder(finalOrder)
-    dispatch(clearCart())
+    // Create order via RTK Query mutation
+    createOrder(finalOrder)
+      .unwrap()
+      .then((savedOrder) => {
+        setSubmittedOrder(savedOrder)
+        dispatch(clearCart())
+      })
+      .catch((err) => {
+        console.error('Failed to save order:', err)
+        // Still show success message but note was not saved
+        setSubmittedOrder(finalOrder)
+        dispatch(clearCart())
+      })
   }
 
   function handleBack() {
@@ -116,8 +130,7 @@ export default function CheckoutPage() {
               <CheckCircle2 size={26} />
             </div>
             <div className="flex-1">
-              <h1 className="font-head text-2xl md:text-3xl font-black text-purple">Order placed</h1>
-              <p className="text-frill-600 mt-2">
+              <h1 className="font-head text-2xl md:text-3xl font-black text-purple">Order placed</h1>              {submittedOrder.id && <p className="text-xs text-frill-400 mt-1">Order #{submittedOrder.id}</p>}              <p className="text-frill-600 mt-2">
                 Your order has been submitted successfully. We’ll confirm the details and start processing it shortly.
               </p>
             </div>

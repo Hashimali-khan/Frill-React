@@ -578,7 +578,9 @@ export default function StudioCanvas({ stageRef, backgroundLayerRef, designLayer
 
         <Layer ref={designLayerRef}>
           <Group ref={groupRef} x={offsetX} y={offsetY} scaleX={stageScale} scaleY={stageScale}>
-            {design.objects.map((object) => {
+            {design.objects
+              .filter((obj) => !obj.viewId || obj.viewId === design.background.viewId)
+              .map((object) => {
               if (object.type === 'text') {
                 const fontStyle = `${object.fontWeight === 'bold' ? 'bold' : 'normal'}${
                   object.fontStyle === 'italic' ? ' italic' : ''
@@ -724,6 +726,7 @@ export default function StudioCanvas({ stageRef, backgroundLayerRef, designLayer
 
         <Layer ref={uiLayerRef} listening={false}>
           <Group x={offsetX} y={offsetY} scaleX={stageScale} scaleY={stageScale}>
+            {/* Guides and visual overlays */}
             <Rect
               x={design.background.printArea.x}
               y={design.background.printArea.y}
@@ -748,14 +751,20 @@ export default function StudioCanvas({ stageRef, backgroundLayerRef, designLayer
               />
             ))}
           </Group>
-          <Transformer
-            ref={transformerRef}
-            rotateEnabled
-            enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right', 'middle-left', 'middle-right', 'top-center', 'bottom-center']}
-            anchorSize={10}
-            borderDash={[4, 4]}
-            onTransformEnd={handleTransformEnd}
-          />
+        </Layer>
+
+        {/* Transformer layer - must have listening={true} to respond to mouse events */}
+        <Layer listening={true}>
+          <Group x={offsetX} y={offsetY} scaleX={stageScale} scaleY={stageScale}>
+            <Transformer
+              ref={transformerRef}
+              rotateEnabled
+              enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right', 'middle-left', 'middle-right', 'top-center', 'bottom-center']}
+              anchorSize={10}
+              borderDash={[4, 4]}
+              onTransformEnd={handleTransformEnd}
+            />
+          </Group>
         </Layer>
       </Stage>
     </div>

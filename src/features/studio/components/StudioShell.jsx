@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Brush, Trash2, Undo2, Redo2, CheckCircle2 } from 'lucide-react'
-import { addItem } from '@/features/cart/cartSlice'
+import { addItem, openCart } from '@/features/cart/cartSlice'
+import { useToast } from '@/hooks/useToast'
 import { useStudioActions } from '../useStudio'
 import {
   selectCanRedo,
@@ -22,6 +24,8 @@ import ImageUploadButton from './ImageUploadButton'
 
 export default function StudioShell({ product, initialColorId, initialViewId, backLink = '/', onBack }) {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { toast } = useToast()
   const design = useSelector(selectDesign)
   const ui = useSelector(selectUiState)
   const canUndo = useSelector(selectCanUndo)
@@ -134,25 +138,42 @@ export default function StudioShell({ product, initialColorId, initialViewId, ba
     const backgroundLayer = backgroundLayerRef.current
     const uiLayer = uiLayerRef.current
 
-    backgroundLayer.hide()
-    uiLayer.hide()
-    stage.draw()
-    const printUrl = stage.toDataURL({ pixelRatio: 3 })
+    try {
+      backgroundLayer.hide()
+      uiLayer.hide()
+      stage.draw()
+      const printUrl = stage.toDataURL({ pixelRatio: 3 })
 
-    backgroundLayer.show()
-    stage.draw()
-    const mockupUrl = stage.toDataURL({ pixelRatio: 1 })
+      backgroundLayer.show()
+      stage.draw()
+      const mockupUrl = stage.toDataURL({ pixelRatio: 1 })
 
-    uiLayer.show()
-    stage.draw()
+      uiLayer.show()
+      stage.draw()
 
-    return { printUrl, mockupUrl }
+      return { printUrl, mockupUrl }
+    } catch (error) {
+      // Canvas is tainted (CORS issue from external images). Log and return nulls.
+      // The design can still be added to cart without mockups.
+      console.warn('Canvas export failed (likely CORS taint):', error.message)
+      
+      // Ensure UI layers are visible again
+      try {
+        backgroundLayer.show()
+        uiLayer.show()
+        stage.draw()
+      } catch {}
+      
+      // Return null mockups so cart item is still added
+      return { printUrl: null, mockupUrl: null }
+    }
   }
 
   function handleConfirmDesign() {
     if (!product || !selectedColor || !selectedView) return
     const exports = exportDesign()
-    if (!exports) return
+    if (exports === null) return
+    // exports can have null URLs if canvas export fails, but we proceed anyway
 
     const designJson = serializeDesign(design)
     dispatch(
@@ -175,6 +196,13 @@ export default function StudioShell({ product, initialColorId, initialViewId, ba
         designId: `design-${Date.now()}`,
       })
     )
+
+    // Show success notification and open cart
+    toast.success(`Design added to cart!`)
+    dispatch(openCart())
+
+    // NOTE: Removed forced navigation so the cart drawer can slide out naturally
+    // Keep the studio open and let the user continue from the cart/drawer
   }
 
   if (!product) {
@@ -253,8 +281,48 @@ export default function StudioShell({ product, initialColorId, initialViewId, ba
         </div>
       </header>
 
+      {/* Mobile Color/View Selector Ribbon */}
+      <div className="lg:hidden h-20 px-4 py-3 bg-white border-b border-brand-border overflow-x-auto flex items-center gap-3">
+        {/* Colors */}
+        <div className="flex items-center gap-2 shrink-0">
+          {product.colors.map((color) => (
+            <button
+              key={color.id}
+              type="button"
+              onClick={() => {
+                setSelectedColorId(color.id)
+                setSelectedViewId(color.views?.[0]?.id)
+              }}
+              className={`w-7 h-7 rounded-full border-2 shrink-0 ${
+                selectedColor?.id === color.id ? 'border-purple' : 'border-brand-border'
+              }`}
+              style={{ background: color.hex }}
+              aria-label={color.name}
+              title={color.name}
+            />
+          ))}
+        </div>
+
+        {/* Views */}
+        <div className="border-r border-brand-border h-8" />
+        <div className="flex items-center gap-2 shrink-0">
+          {selectedColor?.views?.map((view) => (
+            <button
+              key={view.id}
+              type="button"
+              onClick={() => setSelectedViewId(view.id)}
+              className={`px-2.5 py-1 rounded-frill text-[0.6rem] uppercase tracking-widest font-bold shrink-0 ${
+                selectedView?.id === view.id ? 'bg-purple text-white' : 'bg-frill-100 text-frill-600'
+              }`}
+            >
+              {view.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="flex flex-1 overflow-hidden">
-        <aside className="hidden lg:flex w-72 bg-white border-r border-brand-border flex-col">
+        <aside className="hidden lg:flex w-72 bg-white border-r border-brand-border flex-col overflow-y-auto">
           <div className="p-4 border-b border-brand-border">
             <p className="text-[0.65rem] uppercase tracking-widest text-frill-400">Tools</p>
             <div className="mt-3 flex flex-col gap-2">
@@ -339,7 +407,7 @@ export default function StudioShell({ product, initialColorId, initialViewId, ba
             </label>
           </div>
 
-          <div className="p-4 space-y-4">
+          <div className="p-4 space-y-4 pb-32">
             <p className="text-[0.65rem] uppercase tracking-widest text-frill-400">Product</p>
             <div className="space-y-2">
               <p className="text-xs font-semibold text-frill-600">Color</p>

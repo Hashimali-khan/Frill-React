@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Eye, Download, CheckCircle, XCircle, Clock, Mail } from 'lucide-react'
 import { formatPKR } from '@/utils/currency'
-import { DESIGNS_MOCK } from '@/data/designs.mock'
 import { PRODUCTS_MOCK } from '@/data/products.mock'
+import { useGetDesignsQuery, useApproveDesignMutation, useRejectDesignMutation } from '@/features/designs/designsApi'
+import { useToast } from '@/hooks/useToast'
 
 const STATUS_COLORS = {
   pending: { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-700', icon: Clock },
@@ -151,27 +152,47 @@ function DesignPreviewModal({ design, onClose, onApprove, onReject }) {
  * Gallery of customer design submissions with filtering and admin controls
  */
 export default function AdminDesignsPage() {
+  const { toast } = useToast()
   const [selectedDesign, setSelectedDesign] = useState(null)
   const [filterStatus, setFilterStatus] = useState('all')
-  const [designs, setDesigns] = useState(DESIGNS_MOCK)
+  
+  // Fetch designs in real-time with RTK Query
+  const { data: designs = [], isLoading, refetch } = useGetDesignsQuery({ status: filterStatus })
+  
+  // Refetch designs when component mounts or filter changes to ensure fresh data from new orders
+  useEffect(() => {
+    refetch()
+  }, [filterStatus, refetch])
+  
+  // API mutations for approve/reject
+  const [approveDesign] = useApproveDesignMutation()
+  const [rejectDesign] = useRejectDesignMutation()
 
   const filteredDesigns = useMemo(
-    () => (filterStatus === 'all' ? designs : designs.filter(d => d.status === filterStatus)),
-    [designs, filterStatus]
+    () => designs,
+    [designs]
   )
 
-  function handleApprove(designId) {
-    setDesigns(prev =>
-      prev.map(d => (d.id === designId ? { ...d, status: 'approved', updatedAt: new Date().toISOString().split('T')[0] } : d))
-    )
-    setSelectedDesign(null)
+  async function handleApprove(designId) {
+    try {
+      await approveDesign({ id: designId }).unwrap()
+      toast.success('Design approved!')
+      setSelectedDesign(null)
+    } catch (err) {
+      console.error('Approve failed:', err)
+      toast.error('Failed to approve design')
+    }
   }
 
-  function handleReject(designId) {
-    setDesigns(prev =>
-      prev.map(d => (d.id === designId ? { ...d, status: 'rejected', updatedAt: new Date().toISOString().split('T')[0] } : d))
-    )
-    setSelectedDesign(null)
+  async function handleReject(designId) {
+    try {
+      await rejectDesign({ id: designId }).unwrap()
+      toast.success('Design rejected!')
+      setSelectedDesign(null)
+    } catch (err) {
+      console.error('Reject failed:', err)
+      toast.error('Failed to reject design')
+    }
   }
 
   const stats = {
@@ -225,7 +246,14 @@ export default function AdminDesignsPage() {
       </div>
 
       {/* Designs Gallery */}
-      {filteredDesigns.length === 0 ? (
+      {isLoading ? (
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin">
+            <div className="w-8 h-8 border-4 border-frill-200 border-t-purple rounded-full"></div>
+          </div>
+          <p className="text-frill-600 mt-4">Loading designs...</p>
+        </div>
+      ) : filteredDesigns.length === 0 ? (
         <div className="text-center py-12 bg-frill-50 rounded-frill border border-dashed border-brand-border">
           <p className="text-frill-600 font-head text-sm">No designs found</p>
         </div>
