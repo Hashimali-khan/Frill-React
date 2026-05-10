@@ -263,27 +263,31 @@ VITE_STRIPE_KEY=pk_test_...
 ## 📸 Screenshots
 
 ### Storefront & Product Browsing
-![Homepage/Storefront View](placeholder-homepage.jpg)
-*Product catalog with filtering, search, and category navigation*
+<img width="1900" height="908" alt="image" src="https://github.com/user-attachments/assets/d7fa2f56-9a40-4391-a7b3-0d120dd98b20" />
+
 
 ### Design Studio
-![Design Studio Interface](placeholder-studio.jpg)
+![Design Studio Interface](<img width="1905" height="895" alt="image" src="https://github.com/user-attachments/assets/7f1152d1-834c-4416-bfae-50a82c98f802" />
+)
 *Canva-style editor with toolbar, canvas, and properties panel. Real-time mockup preview on the right.*
 
-### Product Customization & Mockup
-![Product Mockup View](placeholder-mockup.jpg)
-*Live preview of design on product with color variations and multiple view angles (front, back, sleeve)*
+
 
 ### Shopping Cart
-![Cart & Checkout](placeholder-cart.jpg)
+![Cart & Checkout](<img width="1781" height="895" alt="image" src="https://github.com/user-attachments/assets/548a1420-44fd-42af-a5b0-6e43fc5428c8" />
+)
 *Cart drawer with custom designs, quantity adjustment, and checkout button*
 
 ### Admin Dashboard
-![Admin Dashboard](placeholder-admin-dashboard.jpg)
+![Admin Dashboard](<img width="1908" height="910" alt="image" src="https://github.com/user-attachments/assets/da1121fc-bd27-47bd-8b8e-e84941d0fd1b" />
+)
 *Analytics, key metrics, and quick access to product/order/customer management*
 
 ### Admin Product Editor
-![Admin Product Management](placeholder-admin-products.jpg)
+![Admin Product Management](<img width="1903" height="904" alt="image" src="https://github.com/user-attachments/assets/024c274d-3445-42a2-ae83-8786a0fbdfe2" />
+)
+<img width="1544" height="902" alt="image" src="https://github.com/user-attachments/assets/358977e2-57dd-463e-bf53-28f730ec3356" />
+
 *Create/edit products with nested colors, views, and print areas configuration*
 
 ## 🧪 Quality Assurance & Testing
