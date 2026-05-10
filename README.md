@@ -267,25 +267,25 @@ VITE_STRIPE_KEY=pk_test_...
 
 
 ### Design Studio
-![Design Studio Interface](<img width="1905" height="895" alt="image" src="https://github.com/user-attachments/assets/7f1152d1-834c-4416-bfae-50a82c98f802" />
-)
+<img width="1905" height="895" alt="image" src="https://github.com/user-attachments/assets/7f1152d1-834c-4416-bfae-50a82c98f802" />
+
 *Canva-style editor with toolbar, canvas, and properties panel. Real-time mockup preview on the right.*
 
 
 
 ### Shopping Cart
-![Cart & Checkout](<img width="1781" height="895" alt="image" src="https://github.com/user-attachments/assets/548a1420-44fd-42af-a5b0-6e43fc5428c8" />
-)
+<img width="1781" height="895" alt="image" src="https://github.com/user-attachments/assets/548a1420-44fd-42af-a5b0-6e43fc5428c8" />
+
 *Cart drawer with custom designs, quantity adjustment, and checkout button*
 
 ### Admin Dashboard
-![Admin Dashboard](<img width="1908" height="910" alt="image" src="https://github.com/user-attachments/assets/da1121fc-bd27-47bd-8b8e-e84941d0fd1b" />
-)
+<img width="1908" height="910" alt="image" src="https://github.com/user-attachments/assets/da1121fc-bd27-47bd-8b8e-e84941d0fd1b" />
+
 *Analytics, key metrics, and quick access to product/order/customer management*
 
 ### Admin Product Editor
-![Admin Product Management](<img width="1903" height="904" alt="image" src="https://github.com/user-attachments/assets/024c274d-3445-42a2-ae83-8786a0fbdfe2" />
-)
+<img width="1903" height="904" alt="image" src="https://github.com/user-attachments/assets/024c274d-3445-42a2-ae83-8786a0fbdfe2" />
+
 <img width="1544" height="902" alt="image" src="https://github.com/user-attachments/assets/358977e2-57dd-463e-bf53-28f730ec3356" />
 
 *Create/edit products with nested colors, views, and print areas configuration*
